@@ -5,4 +5,9 @@
     <RootNamespace>Drone_Enthusiast_Community</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
 </Project>

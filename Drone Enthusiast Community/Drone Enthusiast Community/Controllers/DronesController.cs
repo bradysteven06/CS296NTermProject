@@ -3,19 +3,24 @@
 
 namespace Drone_Enthusiast_Community.Controllers
 {
-    public class HomeController : Controller
+    public class DronesController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Resources()
+        public IActionResult Add()
         {
             return View();
         }
 
-        public IActionResult RulesRegulations()
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
+        public IActionResult Delete()
         {
             return View();
         }

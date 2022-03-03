@@ -1,6 +1,8 @@
+using Drone_Enthusiast_Community.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +26,10 @@ namespace Drone_Enthusiast_Community
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            // enable dependency injection for dbcontext
+            services.AddDbContext<DroneCommDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

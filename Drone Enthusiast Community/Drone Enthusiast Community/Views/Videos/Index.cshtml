@@ -9,11 +9,11 @@
 <form method="post" enctype="multipart/form-data">
     <input type="file" name="files" multiple required />
     <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
-    <button type="submit" class="btn btn-primary" asp-controller="Images" asp-action="UploadImage">Upload to File System</button>
+    <button type="submit" class="btn btn-primary" asp-controller="Videos" asp-action="UploadVideo">Upload to File System</button>
 </form>
 <hr />
 <h4>Files on File System</h4>
-@if (Model.ImageFiles.Count == 0)
+@if (Model.VideoFiles.Count == 0)
 {
     <caption>No Records Found</caption> 
 }
@@ -29,19 +29,20 @@ else
                  </tr>
             </thead>
             <tbody>
-                @foreach (var file in Model.ImageFiles)
+                @foreach (var file in Model.VideoFiles)
                 {
                     <tr>
                         <th>
-                            <img src="~/ImageUploads/@file.Title@file.Extension" alt="image"
+                            <video src="~/VideoUploads/@file.Title@file.Extension" alt="video"
                             class="rounded-circle"
                             height="40" width="40"
                             asp-append-version="true" />
+                            <p>@file.Title@file.Extension</p>
                         </th>
                         <td>@file.Title</td>
                         <td>@file.Date</td>
                         <td>
-                            <a type="button" class="btn btn-danger" asp-controller="Images" asp-action="DeleteImage" asp-route-id="@file.ImageID">Delete</a>
+                            <a type="button" class="btn btn-danger" asp-controller="Videos" asp-action="DeleteVideo" asp-route-id="@file.VideoID">Delete</a>
                         </td>
                     </tr>
                 }

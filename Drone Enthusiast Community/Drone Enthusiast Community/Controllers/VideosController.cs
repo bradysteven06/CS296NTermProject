@@ -11,26 +11,26 @@ using System.Threading.Tasks;
 
 namespace Drone_Enthusiast_Community.Controllers
 {
-    public class ImagesController : Controller
+    public class VideosController : Controller
     {
         private readonly DroneCommDbContext context;
 
-        public ImagesController(DroneCommDbContext context)
+        public VideosController(DroneCommDbContext context)
         {
             this.context = context;
         }
         public async Task<IActionResult> Index()
         {
-            var imageList = await LoadAllFiles();
+            var videoList = await LoadAllFiles();
             ViewBag.Message = TempData["Message"];
-            return View(imageList);
+            return View(videoList);
         }
         [HttpPost]
-        public async Task<IActionResult> UploadImage(List<IFormFile> files, string description)
+        public async Task<IActionResult> UploadVideo(List<IFormFile> files, string description)
         {
             foreach (var file in files)
             {
-                var basePath = Path.Combine(Directory.GetCurrentDirectory() + "\\wwwroot/ImageUploads\\");
+                var basePath = Path.Combine(Directory.GetCurrentDirectory() + "\\wwwroot/VideoUploads\\");
                 bool basePathExists = System.IO.Directory.Exists(basePath);
                 if (!basePathExists) Directory.CreateDirectory(basePath);
                 var fileName = Path.GetFileNameWithoutExtension(file.FileName);
@@ -42,43 +42,43 @@ namespace Drone_Enthusiast_Community.Controllers
                     {
                         await file.CopyToAsync(stream);
                     }
-                    var fileModel = new ImageModel
+                    var fileModel = new VideoModel
                     {
                         Date = DateTime.UtcNow,
                         Title = fileName,
                         FilePath = filePath,
                         Extension = extension
                     };
-                    context.Images.Add(fileModel);
+                    context.Videos.Add(fileModel);
                     context.SaveChanges();
                 }
             }
             TempData["Message"] = "File successfully uploaded to File System.";
             return RedirectToAction("Index");
         }
-       
+
 
         private async Task<FileUploadVM> LoadAllFiles()
         {
             var viewModel = new FileUploadVM();
-            viewModel.ImageFiles = await context.Images.ToListAsync();
+            viewModel.VideoFiles = await context.Videos.ToListAsync();
             return viewModel;
         }
-                
-        public async Task<IActionResult> DeleteImage(int id)
+
+        public async Task<IActionResult> DeleteVideo(int id)
         {
 
-            var file = await context.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync();
-            if (file == null) 
-            { 
-                return null; 
+            var file = await context.Videos.Where(x => x.VideoID == id).FirstOrDefaultAsync();
+            if (file == null)
+            {
+                return null;
             }
-                
+
             if (System.IO.File.Exists(file.FilePath))
             {
                 System.IO.File.Delete(file.FilePath);
             }
-            context.Images.Remove(file);
+            context.Videos.Remove(file);
             context.SaveChanges();
             TempData["Message"] = $"Removed {file.Title} successfully from File System.";
             return RedirectToAction("Index");

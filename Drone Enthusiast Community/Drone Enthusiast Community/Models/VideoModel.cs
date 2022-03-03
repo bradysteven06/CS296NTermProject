@@ -13,6 +13,7 @@ namespace Drone_Enthusiast_Community.Models
         [Required]
         public string Title { get; set; }
         public string FilePath { get; set; }
+        public string Extension { get; set; }
         public DateTime Date { get; set; }
         //public AppUser Uploader;
     }

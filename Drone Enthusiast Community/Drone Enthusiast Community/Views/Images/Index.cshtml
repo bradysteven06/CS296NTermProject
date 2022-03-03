@@ -1,0 +1,51 @@
+﻿<h4>Start Uploading Files Here</h4>
+<hr />
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success alert-dismissible" style="margin-top:20px">
+        @ViewBag.Message
+    </div>
+}
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="files" multiple required />
+    <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
+    <button type="submit" class="btn btn-primary" asp-controller="Images" asp-action="UploadImage">Upload to File System</button>
+    <button class="btn btn-success" type="submit" asp-controller="File" asp-action="UploadToDatabase">Upload to Database</button>
+</form>
+<hr />
+<h4>Files on File System</h4>
+@if (Model.ImageFiles.Count == 0)
+{
+    <caption>No Records Found</caption> 
+}
+else
+{
+    <caption>List of Files on File System</caption>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Created On</th>
+                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model.ImageFiles)
+                {
+                    <tr>
+                        <th>
+                            <img src="~/ImageUploads/@file.Title@file.Extension" alt="image"
+                            class="rounded-circle"
+                            height="40" width="40"
+                            asp-append-version="true" />
+                        </th>
+                        <td>@file.Title</td>
+                        <td>@file.Date</td>
+                        <td>
+                            <a type="button" class="btn btn-danger" asp-controller="Images" asp-action="DeleteImage" asp-route-id="@file.ImageID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+}

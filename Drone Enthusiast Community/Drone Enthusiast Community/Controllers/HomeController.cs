@@ -10,14 +10,11 @@ namespace Drone_Enthusiast_Community.Controllers
             return View();
         }
 
-        public IActionResult Resources()
-        {
-            return View();
-        }
-
         public IActionResult RulesRegulations()
         {
             return View();
         }
+
+        
     }
 }

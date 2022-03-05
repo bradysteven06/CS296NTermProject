@@ -1,0 +1,16 @@
+﻿<a type="button" class="btn btn-primary" asp-controller="Resources" asp-action="Add">Add New Resource</a>
+<table class="table table-striped">
+            <tbody>
+                @foreach (var file in Model.ResourceList)
+                {
+                    <tr>
+                        <th></th>
+                        <td><a href="@file.WebAddress">@file.WebsiteName</a></td>
+                        <td>@file.Description</td>
+                        <td>
+                            <a type="button" class="btn btn-danger" asp-controller="Resources" asp-action="DeleteResource" asp-route-id="@file.ResourceID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>

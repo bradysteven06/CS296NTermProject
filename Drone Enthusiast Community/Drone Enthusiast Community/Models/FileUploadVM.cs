@@ -10,5 +10,6 @@ namespace Drone_Enthusiast_Community.Models
         public List<ImageModel> ImageFiles { get; set; }
         public List<VideoModel> VideoFiles { get; set; }
         public List<DroneModel> DroneFiles { get; set; }
+        public List<ResourceModel> ResourceList { get; set; }
     }
 }

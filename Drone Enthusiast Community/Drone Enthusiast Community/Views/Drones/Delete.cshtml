@@ -1,3 +1,12 @@
-﻿<div class="text-center">
-    <p>Delete</p>
-</div>
+﻿<h4>Confirm Delete</h4>
+
+@foreach (var file in Model.ResourceList)
+{
+<tr>
+    <th></th>
+    <td><a href="@file.WebAddress">@file.WebsiteName</a></td>
+    <td>@file.Description</td>
+    <td>
+        <a type="button" class="btn btn-danger" asp-controller="Resources" asp-action="DeleteResource">Confirm Delete</a>
+    </td>
+</tr>}

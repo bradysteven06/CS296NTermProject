@@ -26,6 +26,11 @@ namespace Drone_Enthusiast_Community.Controllers
             return View(droneList);
         }
 
+        public IActionResult Add()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddDrone(List<IFormFile> files, string description, string name, string size, string weight)
         {
@@ -53,7 +58,7 @@ namespace Drone_Enthusiast_Community.Controllers
                         Size = size,
                         Weight = weight
                     };
-                    context.Drones.Add(fileModel);
+                    await context.Drones.AddAsync(fileModel);
                     context.SaveChanges();
                 }
             }

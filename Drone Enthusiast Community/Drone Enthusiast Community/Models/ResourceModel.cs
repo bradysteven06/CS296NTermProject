@@ -12,6 +12,8 @@ namespace Drone_Enthusiast_Community.Models
         public int ResourceID { get; set; }
         [Required]
         public string WebsiteName { get; set; }
+        [Required]
+        public string WebAddress { get; set; }
         public string Description { get; set; }
     }
 }

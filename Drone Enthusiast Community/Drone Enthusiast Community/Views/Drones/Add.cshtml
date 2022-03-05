@@ -1,3 +1,20 @@
-﻿<div class="text-center">
-    <p>Add</p>
-</div>
+﻿<h4>Start Uploading Files Here</h4>
+<hr />
+@if (ViewBag.Message != null)
+{
+<div class="alert alert-success alert-dismissible" style="margin-top:20px">
+    @ViewBag.Message
+</div>}
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="files" multiple required />
+    <hr />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Name" name="name" required />
+    <hr />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Description" name="description" required />
+    <hr />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Size" name="size" required />
+    <hr />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Weight" name="weight" required />
+    <hr />
+    <button type="submit" class="btn btn-primary" asp-controller="Drones" asp-action="AddDrone">Upload to File System</button>
+</form>

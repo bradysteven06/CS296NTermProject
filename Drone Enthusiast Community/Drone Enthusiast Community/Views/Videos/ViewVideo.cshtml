@@ -1,0 +1,29 @@
+﻿<a type="button" class="btn btn-primary" asp-controller="Videos" asp-action="Index">Back To Videos</a>
+<div>
+    <video src="~/VideoUploads/@Model.Title@Model.Extension" alt="video" id="videoPlayer" controls="controls"
+         height="750" width="750"
+         asp-append-version="true"/>
+    <p>@Model.Title@Model.Extension</p>
+</div>
+
+
+@{
+    <script>
+    var videoPlayer = document.getElementById('videoPlayer');
+
+    // Auto play, half volume.
+    videoPlayer.play()
+    videoPlayer.volume = 0.5;
+
+    // Play / pause.
+    videoPlayer.addEventListener('click', function () {
+        if (videoPlayer.paused == false) {
+            videoPlayer.pause();
+            videoPlayer.firstChild.nodeValue = 'Play';
+        } else {
+            videoPlayer.play();
+            videoPlayer.firstChild.nodeValue = 'Pause';
+        }
+    });
+    </script>
+}

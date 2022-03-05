@@ -33,12 +33,12 @@ else
                 {
                     <tr>
                         <th>
-                            <img src="~/ImageUploads/@file.Title@file.Extension" alt="image"
-                            class="rounded-circle"
-                            height="40" width="40"
-                            asp-append-version="true" />
+                            <a asp-controller="Images" asp-action="ViewImage" asp-route-id="@file.ImageID">
+                                <img src="~/ImageUploads/@file.Title@file.Extension" alt="image"
+                                    height="200" width="200"asp-append-version="true">
+                            </a>
                         </th>
-                        <td>@file.Title</td>
+                        <td>@file.Description</td>
                         <td>@file.Date</td>
                         <td>
                             <a type="button" class="btn btn-danger" asp-controller="Images" asp-action="DeleteImage" asp-route-id="@file.ImageID">Delete</a>

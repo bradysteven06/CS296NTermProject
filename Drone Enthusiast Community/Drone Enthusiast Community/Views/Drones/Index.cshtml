@@ -1,3 +1,55 @@
-﻿<div class="text-center">
-    <p>Drones</p>
-</div>
+﻿<h4>Start Uploading Files Here</h4>
+<hr />
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success alert-dismissible" style="margin-top:20px">
+        @ViewBag.Message
+    </div>
+}
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="files" multiple required />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Name" name="name" required />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Description" name="description" required />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Size" name="size" required />
+    <input type="text" autocomplete="off" placeholder="Enter Drone Weight" name="weight" required />
+    <button type="submit" class="btn btn-primary" asp-controller="Drones" asp-action="AddDrone">Upload to File System</button>
+</form>
+<hr />
+<h4>Files on File System</h4>
+@if (Model.DroneFiles.Count == 0)
+{
+    <caption>No Records Found</caption> 
+}
+else
+{
+    <caption>List of Files on File System</caption>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Size</th>
+                    <th>Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model.DroneFiles)
+                {
+                    <tr>
+                        <th>
+                            <img src="~/DroneUploads/@file.ImageName@file.ImageExtension" alt="image"
+                                height="200" width="200"asp-append-version="true">
+                        </th>
+                        <td>@file.Name</td>
+                        <td>@file.Description</td>
+                        <td>@file.Size</td>
+                        <td>@file.Weight</td>
+                        <td>
+                            <a type="button" class="btn btn-danger" asp-controller="Drones" asp-action="DeleteDrone" asp-route-id="@file.DroneID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+}

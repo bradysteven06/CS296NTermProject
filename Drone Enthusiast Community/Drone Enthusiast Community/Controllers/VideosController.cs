@@ -25,6 +25,10 @@ namespace Drone_Enthusiast_Community.Controllers
             ViewBag.Message = TempData["Message"];
             return View(videoList);
         }
+
+        /*
+         * TODO - set maximum video upload size
+         */
         [HttpPost]
         public async Task<IActionResult> UploadVideo(List<IFormFile> files, string description)
         {
@@ -47,7 +51,8 @@ namespace Drone_Enthusiast_Community.Controllers
                         Date = DateTime.UtcNow,
                         Title = fileName,
                         FilePath = filePath,
-                        Extension = extension
+                        Extension = extension,
+                        Description = description
                     };
                     context.Videos.Add(fileModel);
                     context.SaveChanges();
@@ -57,6 +62,11 @@ namespace Drone_Enthusiast_Community.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> ViewVideo(int id)
+        {
+            var file = await context.Videos.Where(x => x.VideoID == id).FirstOrDefaultAsync();
+            return View(file);
+        }
 
         private async Task<FileUploadVM> LoadAllFiles()
         {

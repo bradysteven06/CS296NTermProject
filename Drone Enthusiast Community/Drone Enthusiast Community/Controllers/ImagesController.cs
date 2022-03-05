@@ -25,6 +25,10 @@ namespace Drone_Enthusiast_Community.Controllers
             ViewBag.Message = TempData["Message"];
             return View(imageList);
         }
+
+        /*
+         * TODO - set maximum image upload size
+         */
         [HttpPost]
         public async Task<IActionResult> UploadImage(List<IFormFile> files, string description)
         {
@@ -47,7 +51,8 @@ namespace Drone_Enthusiast_Community.Controllers
                         Date = DateTime.UtcNow,
                         Title = fileName,
                         FilePath = filePath,
-                        Extension = extension
+                        Extension = extension,
+                        Description = description
                     };
                     context.Images.Add(fileModel);
                     context.SaveChanges();
@@ -56,7 +61,13 @@ namespace Drone_Enthusiast_Community.Controllers
             TempData["Message"] = "File successfully uploaded to File System.";
             return RedirectToAction("Index");
         }
-       
+
+        public async Task<IActionResult> ViewImage(int id)
+        {
+            var file = await context.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync();
+            return View(file);
+        }
+
 
         private async Task<FileUploadVM> LoadAllFiles()
         {

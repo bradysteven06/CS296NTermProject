@@ -24,7 +24,7 @@ else
             <thead>
                 <tr>
                     <th></th>
-                    <th>Name</th>
+                    <th>Description</th>
                     <th>Created On</th>
                  </tr>
             </thead>
@@ -33,13 +33,12 @@ else
                 {
                     <tr>
                         <th>
-                            <video src="~/VideoUploads/@file.Title@file.Extension" alt="video"
-                            class="rounded-circle"
-                            height="40" width="40"
-                            asp-append-version="true" />
-                            <p>@file.Title@file.Extension</p>
+                            <a asp-controller="Videos" asp-action="ViewVideo" asp-route-id="@file.VideoID">
+                                <video src="~/VideoUploads/@file.Title@file.Extension" alt="video"
+                                height="200" width="200"asp-append-version="true" />
+                            </a>
                         </th>
-                        <td>@file.Title</td>
+                        <td>@file.Description</td>
                         <td>@file.Date</td>
                         <td>
                             <a type="button" class="btn btn-danger" asp-controller="Videos" asp-action="DeleteVideo" asp-route-id="@file.VideoID">Delete</a>
@@ -49,3 +48,5 @@ else
             </tbody>
         </table>
 }
+
+

@@ -30,8 +30,14 @@ namespace Drone_Enthusiast_Community.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ImageID")
-                        .HasColumnType("int");
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageExtension")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -57,6 +63,9 @@ namespace Drone_Enthusiast_Community.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
                         .HasColumnType("nvarchar(max)");
@@ -101,6 +110,9 @@ namespace Drone_Enthusiast_Community.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Extension")
                         .HasColumnType("nvarchar(max)");

@@ -73,6 +73,8 @@ namespace Drone_Enthusiast_Community
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            SeedData.SeedAdminUser(app.ApplicationServices).Wait();
         }
     }
 }

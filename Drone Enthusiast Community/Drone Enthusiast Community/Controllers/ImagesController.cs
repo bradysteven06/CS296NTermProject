@@ -1,6 +1,7 @@
 ﻿using Drone_Enthusiast_Community.Data;
 using Drone_Enthusiast_Community.Models;
 using Drone_Enthusiast_Community.Repos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace Drone_Enthusiast_Community.Controllers
         {
             repo = r;
         }
+
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var imageList = await LoadAllFiles();

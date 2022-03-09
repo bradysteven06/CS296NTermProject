@@ -22,7 +22,7 @@ namespace Drone_Enthusiast_Community.Data
             modelBuilder.Entity<ResourceModel>().HasKey(resource => new { resource.ResourceID });
 
             // seed initial data
-            //modelBuilder.Seed();
+            modelBuilder.Seed();
         }
     }
 }

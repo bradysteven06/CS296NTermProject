@@ -75,6 +75,7 @@ namespace Drone_Enthusiast_Community
             });
 
             SeedData.SeedAdminUser(app.ApplicationServices).Wait();
+            SeedData.SeedUser(app.ApplicationServices).Wait();
         }
     }
 }

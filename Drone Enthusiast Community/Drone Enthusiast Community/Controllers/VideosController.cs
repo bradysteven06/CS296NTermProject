@@ -1,6 +1,7 @@
 ﻿using Drone_Enthusiast_Community.Data;
 using Drone_Enthusiast_Community.Models;
 using Drone_Enthusiast_Community.Repos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace Drone_Enthusiast_Community.Controllers
             repo = r;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var videoList = await LoadAllFiles();
@@ -28,11 +30,13 @@ namespace Drone_Enthusiast_Community.Controllers
             return View(videoList);
         }
 
+        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
 
@@ -46,6 +50,7 @@ namespace Drone_Enthusiast_Community.Controllers
          * TODO - Allow larger files, look into chunking file
          */
         [HttpPost]
+        [Authorize]
         [RequestSizeLimit(50_000_000)]
         public async Task<IActionResult> UploadVideo(List<IFormFile> files, string description)
         {
@@ -87,12 +92,14 @@ namespace Drone_Enthusiast_Community.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         public async Task<IActionResult> ViewVideo(int id)
         {
             var file = await repo.GetVideoByIDAsync(id);
             return View(file);
         }
 
+        [Authorize]
         public async Task<IActionResult> DeleteVideo(int id)
         {
 

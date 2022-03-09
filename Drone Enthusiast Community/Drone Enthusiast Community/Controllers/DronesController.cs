@@ -1,6 +1,7 @@
 ﻿using Drone_Enthusiast_Community.Data;
 using Drone_Enthusiast_Community.Models;
 using Drone_Enthusiast_Community.Repos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,11 +29,13 @@ namespace Drone_Enthusiast_Community.Controllers
             return View(droneList);
         }
 
+        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
 
@@ -46,6 +49,7 @@ namespace Drone_Enthusiast_Community.Controllers
          * TODO - set maximum image upload size
          */
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddDrone(List<IFormFile> files, string description, string name, string size, string weight)
         {
             foreach (var file in files)
@@ -83,7 +87,8 @@ namespace Drone_Enthusiast_Community.Controllers
             
             return RedirectToAction("Index");
         }
-        
+
+        [Authorize]
         public async Task<IActionResult> DeleteDrone(int id)
         {
 

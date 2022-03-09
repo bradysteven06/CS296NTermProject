@@ -1,6 +1,7 @@
 ﻿using Drone_Enthusiast_Community.Data;
 using Drone_Enthusiast_Community.Models;
 using Drone_Enthusiast_Community.Repos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -25,11 +26,13 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var file = await repo.GetResourceByIDAsync(id);
@@ -37,6 +40,7 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddResource(string description, string name, string address)
         {
             var fileModel = new ResourceModel
@@ -52,6 +56,7 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         // deletes resource
+        [Authorize]
         public async Task<IActionResult> DeleteResource(int id)
         {
             var file = await repo.GetResourceByIDAsync(id);

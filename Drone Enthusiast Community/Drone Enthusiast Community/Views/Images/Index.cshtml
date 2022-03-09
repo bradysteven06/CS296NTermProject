@@ -1,25 +1,21 @@
-﻿<h4>Start Uploading Files Here</h4>
-<hr />
+﻿<hr />
 @if (ViewBag.Message != null)
 {
     <div class="alert alert-success alert-dismissible" style="margin-top:20px">
         @ViewBag.Message
     </div>
 }
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="files" multiple required />
-    <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
-    <button type="submit" class="btn btn-primary" asp-controller="Images" asp-action="UploadImage">Upload to File System</button>
-</form>
+
+<a class="btn btn-primary" asp-controller="Images" asp-action="Add">Add Image</a>
 <hr />
-<h4>Files on File System</h4>
+
+<h4>Images</h4>
 @if (Model.ImageFiles.Count == 0)
 {
     <caption>No Records Found</caption> 
 }
 else
 {
-    <caption>List of Files on File System</caption>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -41,7 +37,7 @@ else
                         <td>@file.Description</td>
                         <td>@file.Date</td>
                         <td>
-                            <a type="button" class="btn btn-danger" asp-controller="Images" asp-action="DeleteImage" asp-route-id="@file.ImageID">Delete</a>
+                            <a class="btn btn-danger" asp-controller="Images" asp-action="Delete" asp-route-id="@file.ImageID">Delete</a>
                         </td>
                     </tr>
                 }

@@ -1,12 +1,31 @@
 ﻿<h4>Confirm Delete</h4>
+<hr />
 
-@foreach (var file in Model.ResourceList)
-{
-<tr>
-    <th></th>
-    <td><a href="@file.WebAddress">@file.WebsiteName</a></td>
-    <td>@file.Description</td>
-    <td>
-        <a type="button" class="btn btn-danger" asp-controller="Resources" asp-action="DeleteResource">Confirm Delete</a>
-    </td>
-</tr>}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Size</th>
+            <th>Weight</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>
+                <img src="~/DroneUploads/@Model.ImageName@Model.ImageExtension" alt="image"
+                     height="200" width="200" asp-append-version="true">
+            </th>
+            <td>@Model.Name</td>
+            <td>@Model.Description</td>
+            <td>@Model.Size</td>
+            <td>@Model.Weight</td>
+            <td>
+                <a type="button" class="btn btn-danger" asp-controller="Drones" asp-action="DeleteDrone" asp-route-id="@Model.DroneID">Delete</a>
+                <a asp-controller="Drones" asp-action="Index" class="btn btn-primary">Cancel</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

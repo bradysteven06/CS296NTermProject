@@ -1,0 +1,9 @@
+﻿<h4>Add New Video</h4>
+<hr />
+
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="files" required />
+    <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
+    <button type="submit" class="btn btn-primary" asp-controller="Videos" asp-action="UploadVideo">Add Video</button>
+    <a asp-controller="Videos" asp-action="Index" class="btn btn-primary">Cancel</a>
+</form>

@@ -26,7 +26,20 @@ namespace Drone_Enthusiast_Community.Controllers
             return View(imageList);
         }
 
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var file = await context.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync();
+            return View(file);
+        }
+
         /*
+         * TODO - Add file type validation
+         * TODO - Refactor code for single file instead of list
          * TODO - set maximum image upload size
          */
         [HttpPost]
@@ -56,9 +69,13 @@ namespace Drone_Enthusiast_Community.Controllers
                     };
                     context.Images.Add(fileModel);
                     context.SaveChanges();
+                    TempData["Message"] = "File successfully uploaded.";
+                }
+                else
+                {
+                    TempData["Message"] = "Upload failed. Filename already taken.";
                 }
             }
-            TempData["Message"] = "File successfully uploaded to File System.";
             return RedirectToAction("Index");
         }
 
@@ -68,7 +85,7 @@ namespace Drone_Enthusiast_Community.Controllers
             return View(file);
         }
 
-
+        // Gets list of images
         private async Task<FileUploadVM> LoadAllFiles()
         {
             var viewModel = new FileUploadVM();

@@ -1,4 +1,4 @@
-﻿<h4>Start Uploading Files Here</h4>
+﻿<h4 align="center">Videos</h4>
 <hr />
 @if (ViewBag.Message != null)
 {
@@ -6,20 +6,17 @@
         @ViewBag.Message
     </div>
 }
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="files" multiple required />
-    <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
-    <button type="submit" class="btn btn-primary" asp-controller="Videos" asp-action="UploadVideo">Upload to File System</button>
-</form>
+
+<a type="button" class="btn btn-primary" asp-controller="Videos" asp-action="Add">Add Video</a>
 <hr />
-<h4>Files on File System</h4>
+
+<h4>Videos</h4>
 @if (Model.VideoFiles.Count == 0)
 {
     <caption>No Records Found</caption> 
 }
 else
 {
-    <caption>List of Files on File System</caption>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -41,7 +38,7 @@ else
                         <td>@file.Description</td>
                         <td>@file.Date</td>
                         <td>
-                            <a type="button" class="btn btn-danger" asp-controller="Videos" asp-action="DeleteVideo" asp-route-id="@file.VideoID">Delete</a>
+                            <a class="btn btn-danger" asp-controller="Videos" asp-action="Delete" asp-route-id="@file.VideoID">Delete</a>
                         </td>
                     </tr>
                 }

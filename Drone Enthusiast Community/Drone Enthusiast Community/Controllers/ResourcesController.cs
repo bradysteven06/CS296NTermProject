@@ -32,6 +32,12 @@ namespace Drone_Enthusiast_Community.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            var file = await context.Resources.Where(x => x.ResourceID == id).FirstOrDefaultAsync();
+            return View(file);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddResource(string description, string name, string address)
         {

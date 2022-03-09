@@ -1,0 +1,28 @@
+﻿<h4>Confirm Delete</h4>
+<hr />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Created On</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>
+                <a asp-controller="Images" asp-action="ViewImage" asp-route-id="@Model.ImageID">
+                    <img src="~/ImageUploads/@Model.Title@Model.Extension" alt="image"
+                         height="200" width="200" asp-append-version="true">
+                </a>
+            </th>
+            <td>@Model.Description</td>
+            <td>@Model.Date</td>
+            <td>
+                <a type="button" class="btn btn-danger" asp-controller="Images" asp-action="DeleteImage" asp-route-id="@Model.ImageID">Delete</a>
+                <a asp-controller="Images" asp-action="Index" class="btn btn-primary">Cancel</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

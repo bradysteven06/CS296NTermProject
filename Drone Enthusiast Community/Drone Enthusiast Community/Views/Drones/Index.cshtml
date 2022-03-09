@@ -1,5 +1,5 @@
 ﻿<h4 align="center">Drones</h4>
-<a type="button" class="btn btn-primary" asp-controller="Drones" asp-action="Add">Add Drone</a>
+<a class="btn btn-primary" asp-controller="Drones" asp-action="Add">Add Drone</a>
 <hr />
 @if (Model.DroneFiles.Count == 0)
 {
@@ -7,7 +7,6 @@
 }
 else
 {
-    <caption>List of Files on File System</caption>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -31,7 +30,7 @@ else
                         <td>@file.Size</td>
                         <td>@file.Weight</td>
                         <td>
-                            <a type="button" class="btn btn-danger" asp-controller="Drones" asp-action="DeleteDrone" asp-route-id="@file.DroneID">Delete</a>
+                            <a type="button" class="btn btn-danger" asp-controller="Drones" asp-action="Delete" asp-route-id="@file.DroneID">Delete</a>
                         </td>
                     </tr>
                 }

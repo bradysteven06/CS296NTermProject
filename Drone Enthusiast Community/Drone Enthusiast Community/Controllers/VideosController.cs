@@ -19,6 +19,7 @@ namespace Drone_Enthusiast_Community.Controllers
         {
             this.context = context;
         }
+
         public async Task<IActionResult> Index()
         {
             var videoList = await LoadAllFiles();
@@ -26,10 +27,25 @@ namespace Drone_Enthusiast_Community.Controllers
             return View(videoList);
         }
 
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+
+            var file = await context.Videos.Where(x => x.VideoID == id).FirstOrDefaultAsync();
+            return View(file);
+        }
+
         /*
-         * TODO - set maximum video upload size
+         * TODO - Add file type validation
+         * TODO - Refactor code for single file instead of list
+         * TODO - Allow larger files, look into chunking file
          */
         [HttpPost]
+        [RequestSizeLimit(50_000_000)]
         public async Task<IActionResult> UploadVideo(List<IFormFile> files, string description)
         {
             foreach (var file in files)
@@ -40,6 +56,7 @@ namespace Drone_Enthusiast_Community.Controllers
                 var fileName = Path.GetFileNameWithoutExtension(file.FileName);
                 var filePath = Path.Combine(basePath, file.FileName);
                 var extension = Path.GetExtension(file.FileName);
+
                 if (!System.IO.File.Exists(filePath))
                 {
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -56,9 +73,17 @@ namespace Drone_Enthusiast_Community.Controllers
                     };
                     context.Videos.Add(fileModel);
                     context.SaveChanges();
+                    TempData["Message"] = "File successfully uploaded.";
                 }
+                else
+                {
+                    TempData["Message"] = "Upload failed. Filename already taken.";
+                }
+                
+                
+
             }
-            TempData["Message"] = "File successfully uploaded to File System.";
+            
             return RedirectToAction("Index");
         }
 
@@ -68,6 +93,7 @@ namespace Drone_Enthusiast_Community.Controllers
             return View(file);
         }
 
+        // Gets list of videos
         private async Task<FileUploadVM> LoadAllFiles()
         {
             var viewModel = new FileUploadVM();

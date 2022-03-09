@@ -1,0 +1,16 @@
+﻿<h4>Confirm Delete</h4>
+<hr />
+
+<table class="table table-striped">
+    <tbody>
+        <tr>
+            <th></th>
+            <td><a href="@Model.WebAddress">@Model.WebsiteName</a></td>
+            <td>@Model.Description</td>
+            <td>
+                <a type="button" class="btn btn-danger" asp-controller="Resources" asp-action="DeleteResource" asp-route-id="@Model.ResourceID">Delete</a>
+                <a asp-controller="Resources" asp-action="Index" class="btn btn-primary">Cancel</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

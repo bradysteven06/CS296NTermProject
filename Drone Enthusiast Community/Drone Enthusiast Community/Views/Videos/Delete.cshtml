@@ -1,0 +1,29 @@
+﻿<h4>Confirm Delete</h4>
+<hr />
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Description</th>
+            <th>Created On</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>
+                <a asp-controller="Videos" asp-action="ViewVideo" asp-route-id="@Model.VideoID">
+                    <video src="~/VideoUploads/@Model.Title@Model.Extension" alt="video"
+                           height="200" width="200" asp-append-version="true" />
+                </a>
+            </th>
+            <td>@Model.Description</td>
+            <td>@Model.Date</td>
+            <td>
+                <a class="btn btn-danger" asp-controller="Videos" asp-action="DeleteVideo" asp-route-id="@Model.VideoID">Delete</a>
+                <a asp-controller="Videos" asp-action="Index" class="btn btn-primary">Cancel</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

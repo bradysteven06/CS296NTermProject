@@ -1,4 +1,7 @@
-﻿<form method="post">
+﻿<h4>Add New Resource</h4>
+<hr />
+
+<form method="post">
     <input type="text" autocomplete="on" placeholder="Enter Website Name" name="name" required />
     <hr />
     <input type="text" autocomplete="on" placeholder="Enter Website Address" name="address" required />
@@ -6,4 +9,5 @@
     <input type="text" autocomplete="on" placeholder="Enter Description" name="description" required />
     <hr />
     <button type="submit" class="btn btn-primary" asp-controller="Resources" asp-action="AddResource">Add Resource</button>
+    <a asp-controller="Resources" asp-action="Index" class="btn btn-primary">Cancel</a>
 </form>

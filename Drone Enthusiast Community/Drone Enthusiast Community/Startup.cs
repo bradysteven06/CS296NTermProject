@@ -1,4 +1,5 @@
 using Drone_Enthusiast_Community.Data;
+using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +27,12 @@ namespace Drone_Enthusiast_Community
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            // enable dependency injection of repositories into controllers
+            services.AddTransient<IResourceRepository, ResourceRepository>();
+            services.AddTransient<IDroneRepository, DroneRepository>();
+            services.AddTransient<IImageRepository, ImageRepository>();
+            services.AddTransient<IVideoRepository, VideoRepository>();
 
             // enable dependency injection for dbcontext
             services.AddDbContext<DroneCommDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

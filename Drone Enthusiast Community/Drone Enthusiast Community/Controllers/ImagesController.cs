@@ -1,5 +1,6 @@
 ﻿using Drone_Enthusiast_Community.Data;
 using Drone_Enthusiast_Community.Models;
+using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,11 @@ namespace Drone_Enthusiast_Community.Controllers
 {
     public class ImagesController : Controller
     {
-        private readonly DroneCommDbContext context;
+        IImageRepository repo;
 
-        public ImagesController(DroneCommDbContext context)
+        public ImagesController(IImageRepository r)
         {
-            this.context = context;
+            repo = r;
         }
         public async Task<IActionResult> Index()
         {
@@ -33,7 +34,7 @@ namespace Drone_Enthusiast_Community.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var file = await context.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync();
+            var file = await repo.GetImageByIDAsync(id);
             return View(file);
         }
 
@@ -42,6 +43,8 @@ namespace Drone_Enthusiast_Community.Controllers
          * TODO - Refactor code for single file instead of list
          * TODO - set maximum image upload size
          */
+
+        // uploads an image
         [HttpPost]
         public async Task<IActionResult> UploadImage(List<IFormFile> files, string description)
         {
@@ -67,8 +70,7 @@ namespace Drone_Enthusiast_Community.Controllers
                         Extension = extension,
                         Description = description
                     };
-                    context.Images.Add(fileModel);
-                    context.SaveChanges();
+                    await repo.AddImageAsync(fileModel);
                     TempData["Message"] = "File successfully uploaded.";
                 }
                 else
@@ -79,24 +81,18 @@ namespace Drone_Enthusiast_Community.Controllers
             return RedirectToAction("Index");
         }
 
+        // gets single image object for view
         public async Task<IActionResult> ViewImage(int id)
         {
-            var file = await context.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync();
+            var file = await repo.GetImageByIDAsync(id);
             return View(file);
         }
 
-        // Gets list of images
-        private async Task<FileUploadVM> LoadAllFiles()
-        {
-            var viewModel = new FileUploadVM();
-            viewModel.ImageFiles = await context.Images.ToListAsync();
-            return viewModel;
-        }
-                
+        // deletes image
         public async Task<IActionResult> DeleteImage(int id)
         {
 
-            var file = await context.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync();
+            var file = await repo.GetImageByIDAsync(id);
             if (file == null) 
             { 
                 return null; 
@@ -106,10 +102,17 @@ namespace Drone_Enthusiast_Community.Controllers
             {
                 System.IO.File.Delete(file.FilePath);
             }
-            context.Images.Remove(file);
-            context.SaveChanges();
+            await repo.DeleteImageAsync(file);
             TempData["Message"] = $"Removed {file.Title} successfully from File System.";
             return RedirectToAction("Index");
+        }
+
+        // Gets list of images
+        private async Task<FileUploadVM> LoadAllFiles()
+        {
+            var viewModel = new FileUploadVM();
+            viewModel.ImageFiles = await repo.Images.ToListAsync();
+            return viewModel;
         }
     }
 }

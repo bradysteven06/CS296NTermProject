@@ -1,21 +1,19 @@
 ﻿using Drone_Enthusiast_Community.Data;
 using Drone_Enthusiast_Community.Models;
+using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Drone_Enthusiast_Community.Controllers
 {
     public class ResourcesController : Controller
     {
-        private readonly DroneCommDbContext context;
+        IResourceRepository repo;
 
-        public ResourcesController(DroneCommDbContext context)
+        public ResourcesController(IResourceRepository r)
         {
-            this.context = context;
+            repo = r;
         }
 
         [HttpGet]
@@ -34,7 +32,7 @@ namespace Drone_Enthusiast_Community.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var file = await context.Resources.Where(x => x.ResourceID == id).FirstOrDefaultAsync();
+            var file = await repo.GetResourceByIDAsync(id);
             return View(file);
         }
 
@@ -47,9 +45,8 @@ namespace Drone_Enthusiast_Community.Controllers
                 Description = description,
                 WebAddress = address,
             };
-            await context.Resources.AddAsync(fileModel);
-            context.SaveChanges();
-                
+            await repo.AddResourceAsync(fileModel);
+
             TempData["Message"] = "File successfully uploaded to File System.";
             return RedirectToAction("Index");
         }
@@ -57,15 +54,15 @@ namespace Drone_Enthusiast_Community.Controllers
         // deletes resource
         public async Task<IActionResult> DeleteResource(int id)
         {
-            var file = await context.Resources.Where(x => x.ResourceID == id).FirstOrDefaultAsync();
+            var file = await repo.GetResourceByIDAsync(id);
 
             if (file == null)
             {
                 return null;
             }
 
-            context.Resources.Remove(file);
-            context.SaveChanges();
+            await repo.DeleteResourceAsync(file);
+
             TempData["Message"] = $"Removed {file.WebsiteName} successfully from File System.";
             return RedirectToAction("Index");
         }
@@ -74,7 +71,7 @@ namespace Drone_Enthusiast_Community.Controllers
         private async Task<FileUploadVM> LoadAllFiles()
         {
             var viewModel = new FileUploadVM();
-            viewModel.ResourceList = await context.Resources.ToListAsync();
+            viewModel.ResourceList = await repo.Resources.ToListAsync();
             return viewModel;
         }
     }

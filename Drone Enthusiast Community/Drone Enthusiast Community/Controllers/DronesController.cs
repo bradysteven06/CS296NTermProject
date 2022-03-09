@@ -1,5 +1,6 @@
 ﻿using Drone_Enthusiast_Community.Data;
 using Drone_Enthusiast_Community.Models;
+using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +14,13 @@ namespace Drone_Enthusiast_Community.Controllers
 {
     public class DronesController : Controller
     {
-        private readonly DroneCommDbContext context;
+        IDroneRepository repo;
 
-        public DronesController(DroneCommDbContext context)
+        public DronesController(IDroneRepository r)
         {
-            this.context = context;
+            repo = r;
         }
+
         public async Task<IActionResult> Index()
         {
             var droneList = await LoadAllFiles();
@@ -34,7 +36,7 @@ namespace Drone_Enthusiast_Community.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
-            var file = await context.Drones.Where(x => x.DroneID == id).FirstOrDefaultAsync();
+            var file = await repo.GetDroneByIDAsync(id);
             return View(file);
         }
 
@@ -70,8 +72,7 @@ namespace Drone_Enthusiast_Community.Controllers
                         Size = size,
                         Weight = weight
                     };
-                    await context.Drones.AddAsync(fileModel);
-                    context.SaveChanges();
+                    await repo.AddDroneAsync(fileModel);
                     TempData["Message"] = "File successfully uploaded.";
                 }
                 else
@@ -82,19 +83,11 @@ namespace Drone_Enthusiast_Community.Controllers
             
             return RedirectToAction("Index");
         }
-
-        // Gets list of drones
-        private async Task<FileUploadVM> LoadAllFiles()
-        {
-            var viewModel = new FileUploadVM();
-            viewModel.DroneFiles = await context.Drones.ToListAsync();
-            return viewModel;
-        }
-
+        
         public async Task<IActionResult> DeleteDrone(int id)
         {
 
-            var file = await context.Drones.Where(x => x.DroneID == id).FirstOrDefaultAsync();
+            var file = await repo.GetDroneByIDAsync(id);
             if (file == null)
             {
                 return null;
@@ -104,10 +97,17 @@ namespace Drone_Enthusiast_Community.Controllers
             {
                 System.IO.File.Delete(file.FilePath);
             }
-            context.Drones.Remove(file);
-            context.SaveChanges();
+            await repo.DeleteDroneAsync(file);
             TempData["Message"] = $"Removed {file.Name} successfully from File System.";
             return RedirectToAction("Index");
+        }
+
+        // Gets list of drones
+        private async Task<FileUploadVM> LoadAllFiles()
+        {
+            var viewModel = new FileUploadVM();
+            viewModel.DroneFiles = await repo.Drones.ToListAsync();
+            return viewModel;
         }
     }
 }

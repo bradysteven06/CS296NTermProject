@@ -1,4 +1,5 @@
 ﻿using Drone_Enthusiast_Community.Models;
+using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +14,20 @@ namespace Drone_Enthusiast_Community.Controllers
     public class AdminController : Controller
     {
 
-       /* private UserManager<AppUser> userManager;
+        private UserManager<AppUser> userManager;
         private RoleManager<IdentityRole> roleManager;
-        private IReviewRepository reviewRepo;
+        private IImageRepository imageRepo;
+        private IVideoRepository videoRepo;
 
         public AdminController(UserManager<AppUser> userMngr,
                                 RoleManager<IdentityRole> roleMngr,
-                                IReviewRepository repo)
+                                IImageRepository iRepo,
+                                IVideoRepository vRepo)
         {
             userManager = userMngr;
             roleManager = roleMngr;
-            reviewRepo = repo;
+            imageRepo = iRepo;
+            videoRepo = vRepo;
         }
 
         /// <summary>
@@ -56,10 +60,14 @@ namespace Drone_Enthusiast_Community.Controllers
             AppUser user = await userManager.FindByIdAsync(id);
             if (user != null)
             {
+                var iPosts = (from i in imageRepo.Images
+                          where i.Uploader.Name == user.Name
+                          select i).Count<ImageModel>();
+                var vPosts = (from v in videoRepo.Videos
+                              where v.Uploader.Name == user.Name
+                              select v).Count<VideoModel>();
                 // Check to see if the user has posted a review
-                if (0 == (from r in reviewRepo.Reviews
-                            where r.Reviewer.Name == user.Name
-                            select r).Count<Review>())
+                if (0 == iPosts && 0 == vPosts)
                 {
 
                     result = await userManager.DeleteAsync(user);
@@ -67,7 +75,7 @@ namespace Drone_Enthusiast_Community.Controllers
                 else
                 {
                     result = IdentityResult.Failed(new IdentityError()
-                    { Description = "User's reviews must be deleted first" });
+                    { Description = "User's images and videos must be deleted first" });
                 }
 
                 if (!result.Succeeded)
@@ -116,7 +124,7 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
 
-        *//****************  Role management *******************//*
+        /***************  Role management ******************/
 
         [HttpPost]
         public async Task<IActionResult> DeleteRole(string id)
@@ -160,6 +168,6 @@ namespace Drone_Enthusiast_Community.Controllers
                 }
             }
             return View(model);
-        }*/
+        }
     }
 }

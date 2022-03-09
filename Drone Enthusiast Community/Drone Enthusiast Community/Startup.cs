@@ -1,8 +1,10 @@
 using Drone_Enthusiast_Community.Data;
+using Drone_Enthusiast_Community.Models;
 using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +39,11 @@ namespace Drone_Enthusiast_Community
             // enable dependency injection for dbcontext
             services.AddDbContext<DroneCommDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            // adds identity service
+            services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<DroneCommDbContext>()
+                .AddDefaultTokenProviders();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +64,7 @@ namespace Drone_Enthusiast_Community
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -8,8 +8,9 @@
 </head>
 <body>
     <header>
-        @*@using Microsoft.AspNetCore.Identity
-        @inject SignInManager<AppUser> signInManager*@
+        @using Microsoft.AspNetCore.Identity
+        @using Drone_Enthusiast_Community.Models
+        @inject SignInManager<AppUser> signInManager
 
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -37,6 +38,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Resources" asp-action="Index">Resources</a>
                         </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Administration">Administration </a>
+                            </li>
+                        }
+
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account"
+                                   asp-action="LogOut">Logout</a> &nbsp; @User.Identity.Name
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>

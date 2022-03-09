@@ -16,6 +16,6 @@ namespace Drone_Enthusiast_Community.Models
         public string FilePath { get; set; }
         public string Extension { get; set; }
         public DateTime Date { get; set; }
-        //public AppUser Uploader;
+        public AppUser Uploader { get; set; }
     }
 }

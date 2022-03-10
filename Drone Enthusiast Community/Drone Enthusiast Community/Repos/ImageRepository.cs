@@ -27,24 +27,18 @@ namespace Drone_Enthusiast_Community.Repos
             }
         }
 
-        // Returns a image object
-        public async Task<ImageModel> GetImageByIDAsync(int id)
-        {
-            return await context.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync();
-        }
-
         // Add a image
-        public async Task<int> AddImageAsync(ImageModel image)
+        public async Task AddImageAsync(ImageModel image)
         {
             await context.Images.AddAsync(image);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         // Delete a image
-        public async Task<int> DeleteImageAsync(ImageModel image)
+        public async Task DeleteImageAsync(ImageModel image)
         {
             context.Images.Remove(image);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

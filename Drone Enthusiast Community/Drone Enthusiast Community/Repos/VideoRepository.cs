@@ -26,24 +26,18 @@ namespace Drone_Enthusiast_Community.Repos
             }
         }
 
-        // Returns a video object
-        public async Task<VideoModel> GetVideoByIDAsync(int id)
-        {
-            return await context.Videos.Where(x => x.VideoID == id).FirstOrDefaultAsync();
-        }
-
         // Add a video
-        public async Task<int> AddVideoAsync(VideoModel video)
+        public async Task AddVideoAsync(VideoModel video)
         {
             await context.Videos.AddAsync(video);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         // Delete a video
-        public async Task<int> DeleteVideoAsync(VideoModel video)
+        public async Task DeleteVideoAsync(VideoModel video)
         {
             context.Videos.Remove(video);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

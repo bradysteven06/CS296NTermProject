@@ -3,6 +3,7 @@ using Drone_Enthusiast_Community.Models;
 using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,10 +17,12 @@ namespace Drone_Enthusiast_Community.Controllers
     public class VideosController : Controller
     {
         IVideoRepository repo;
+        UserManager<AppUser> userManager;
 
-        public VideosController(IVideoRepository r)
+        public VideosController(IVideoRepository r, UserManager<AppUser> u)
         {
             repo = r;
+            userManager = u;
         }
 
         [Authorize]
@@ -40,7 +43,7 @@ namespace Drone_Enthusiast_Community.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
-            var file = await repo.GetVideoByIDAsync(id);
+            var file = await repo.Videos.Where(x => x.VideoID == id).FirstOrDefaultAsync();
             return View(file);
         }
 
@@ -49,6 +52,7 @@ namespace Drone_Enthusiast_Community.Controllers
          * TODO - Refactor code for single file instead of list
          * TODO - Allow larger files, look into chunking file
          * TODO - Display Uploaded by
+         * TODO - Display error for files larger than limit
          */
         [HttpPost]
         [Authorize]
@@ -76,7 +80,8 @@ namespace Drone_Enthusiast_Community.Controllers
                         Title = fileName,
                         FilePath = filePath,
                         Extension = extension,
-                        Description = description
+                        Description = description,
+                        Uploader = await userManager.GetUserAsync(User)
                     };
                     await repo.AddVideoAsync(fileModel);
                     TempData["Message"] = "File successfully uploaded.";
@@ -96,7 +101,7 @@ namespace Drone_Enthusiast_Community.Controllers
         [Authorize]
         public async Task<IActionResult> ViewVideo(int id)
         {
-            var file = await repo.GetVideoByIDAsync(id);
+            var file = await repo.Videos.Where(x => x.VideoID == id).FirstOrDefaultAsync();
             return View(file);
         }
 
@@ -104,7 +109,7 @@ namespace Drone_Enthusiast_Community.Controllers
         public async Task<IActionResult> DeleteVideo(int id)
         {
 
-            var file = await repo.GetVideoByIDAsync(id);
+            var file = await repo.Videos.Where(x => x.VideoID == id).FirstOrDefaultAsync();
             if (file == null)
             {
                 return null;

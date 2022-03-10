@@ -27,24 +27,18 @@ namespace Drone_Enthusiast_Community.Repos
             }
         }
 
-        // Returns a drone object
-        public async Task<DroneModel> GetDroneByIDAsync(int id)
-        {
-            return await context.Drones.Where(x => x.DroneID == id).FirstOrDefaultAsync();
-        }
-
         // Add a drone
-        public async Task<int> AddDroneAsync(DroneModel drone)
+        public async Task AddDroneAsync(DroneModel drone)
         {
             await context.Drones.AddAsync(drone);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         // Delete a drone
-        public async Task<int> DeleteDroneAsync(DroneModel drone)
+        public async Task DeleteDroneAsync(DroneModel drone)
         {
             context.Drones.Remove(drone);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

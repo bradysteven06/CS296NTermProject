@@ -38,8 +38,7 @@ namespace Drone_Enthusiast_Community.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-
-            var file = await repo.GetDroneByIDAsync(id);
+            var file = await repo.Drones.Where(x => x.DroneID == id).FirstOrDefaultAsync();
             return View(file);
         }
 
@@ -92,7 +91,7 @@ namespace Drone_Enthusiast_Community.Controllers
         public async Task<IActionResult> DeleteDrone(int id)
         {
 
-            var file = await repo.GetDroneByIDAsync(id);
+            var file = await repo.Drones.Where(x => x.DroneID == id).FirstOrDefaultAsync();
             if (file == null)
             {
                 return null;

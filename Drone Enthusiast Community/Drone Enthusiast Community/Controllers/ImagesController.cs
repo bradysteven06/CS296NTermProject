@@ -3,6 +3,7 @@ using Drone_Enthusiast_Community.Models;
 using Drone_Enthusiast_Community.Repos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,10 +17,12 @@ namespace Drone_Enthusiast_Community.Controllers
     public class ImagesController : Controller
     {
         IImageRepository repo;
+        UserManager<AppUser> userManager;
 
-        public ImagesController(IImageRepository r)
+        public ImagesController(IImageRepository r, UserManager<AppUser> u)
         {
             repo = r;
+            userManager = u;
         }
 
         [Authorize]
@@ -71,7 +74,8 @@ namespace Drone_Enthusiast_Community.Controllers
                         Title = fileName,
                         FilePath = filePath,
                         Extension = extension,
-                        Description = description
+                        Description = description,
+                        Uploader = await userManager.GetUserAsync(User)
                     };
                     await repo.AddImageAsync(fileModel);
                     TempData["Message"] = "File successfully uploaded.";

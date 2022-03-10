@@ -25,24 +25,18 @@ namespace Drone_Enthusiast_Community.Repos
             }
         }
 
-        // Returns a resource object
-        public async Task<ResourceModel> GetResourceByIDAsync(int id)
-        {
-            return await context.Resources.Where(x => x.ResourceID == id).FirstOrDefaultAsync();
-        }
-
         // Add a resource
-        public async Task<int> AddResourceAsync(ResourceModel resource)
+        public async Task AddResourceAsync(ResourceModel resource)
         {
             await context.Resources.AddAsync(resource);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         // Delete a resource
-        public async Task<int> DeleteResourceAsync(ResourceModel resource)
+        public async Task DeleteResourceAsync(ResourceModel resource)
         {
             context.Resources.Remove(resource);
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

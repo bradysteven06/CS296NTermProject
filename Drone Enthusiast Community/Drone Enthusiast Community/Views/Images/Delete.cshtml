@@ -19,6 +19,7 @@
             </th>
             <td>@Model.Description</td>
             <td>@Model.Date</td>
+            <td>@Model.Uploader</td>
             <td>
                 <a type="button" class="btn btn-danger" asp-controller="Images" asp-action="DeleteImage" asp-route-id="@Model.ImageID">Delete</a>
                 <a asp-controller="Images" asp-action="Index" class="btn btn-primary">Cancel</a>

@@ -40,7 +40,7 @@ namespace Drone_Enthusiast_Community.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var file = await repo.GetImageByIDAsync(id);
+            var file = await repo.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync(); ;
             return View(file);
         }
 
@@ -92,7 +92,7 @@ namespace Drone_Enthusiast_Community.Controllers
         // gets single image object for view
         public async Task<IActionResult> ViewImage(int id)
         {
-            var file = await repo.GetImageByIDAsync(id);
+            var file = await repo.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync(); ;
             return View(file);
         }
 
@@ -100,7 +100,7 @@ namespace Drone_Enthusiast_Community.Controllers
         public async Task<IActionResult> DeleteImage(int id)
         {
 
-            var file = await repo.GetImageByIDAsync(id);
+            var file = await repo.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync(); ;
             if (file == null) 
             { 
                 return null; 

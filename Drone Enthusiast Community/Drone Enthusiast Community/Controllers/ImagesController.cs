@@ -48,6 +48,7 @@ namespace Drone_Enthusiast_Community.Controllers
          * TODO - Add file type validation
          * TODO - Refactor code for single file instead of list
          * TODO - set maximum image upload size
+         * TODO - Display Uploaded by
          */
 
         // uploads an image

@@ -48,10 +48,11 @@ namespace Drone_Enthusiast_Community.Controllers
          * TODO - Add file type validation
          * TODO - Refactor code for single file instead of list
          * TODO - Allow larger files, look into chunking file
+         * TODO - Display Uploaded by
          */
         [HttpPost]
         [Authorize]
-        [RequestSizeLimit(50_000_000)]
+        [RequestSizeLimit(25_000_000)]
         public async Task<IActionResult> UploadVideo(List<IFormFile> files, string description)
         {
             foreach (var file in files)

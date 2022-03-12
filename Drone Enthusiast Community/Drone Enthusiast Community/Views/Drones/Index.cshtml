@@ -1,39 +1,53 @@
-﻿<h4 align="center">Drones</h4>
+﻿@using Drone_Enthusiast_Community.Models
+
+<h4 align="center">Drones</h4>
 <a class="btn btn-primary" asp-controller="Drones" asp-action="Add">Add Drone</a>
+<p>Allowed file types - jpg, jpeg, png, gif</p>
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success alert-dismissible" style="margin-top:20px">
+        @ViewBag.Message
+    </div>}
 <hr />
-@if (Model.DroneFiles.Count == 0)
-{
-    <caption>No Records Found</caption> 
+
+<h6>Search Drones</h6>
+<form method="get" asp-controller="Drones" asp-action="FilterDrones" class="container">
+    <div class="row p-2">
+        <label for="Name" class="control-label col-md-1">Drone Name</label>
+        <input name="name" class="form-control col-md-6" />
+    </div>
+    <div class="row p-2">
+        <button type="submit" class="form-control btn btn-success col-2 mr-1">Submit</button>
+        <a asp-controller="Drones" asp-action="Index" class="form-control btn btn-secondary col-2">Clear filters</a>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Size</th>
+            <th>Weight</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DroneModel file in Model)
+        {
+<tr>
+    <th>
+        <img src="~/DroneUploads/@file.ImageName@file.ImageExtension" alt="image"
+             height="200" width="200" asp-append-version="true">
+    </th>
+    <td>@file.Name</td>
+    <td>@file.Description</td>
+    <td>@file.Size</td>
+    <td>@file.Weight</td>
+    <td>
+        <a type="button" class="btn btn-danger" asp-controller="Drones" asp-action="Delete" asp-route-id="@file.DroneID">Delete</a>
+    </td>
+</tr>
 }
-else
-{
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Size</th>
-                    <th>Weight</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var file in Model.DroneFiles)
-                {
-                    <tr>
-                        <th>
-                            <img src="~/DroneUploads/@file.ImageName@file.ImageExtension" alt="image"
-                                height="200" width="200"asp-append-version="true">
-                        </th>
-                        <td>@file.Name</td>
-                        <td>@file.Description</td>
-                        <td>@file.Size</td>
-                        <td>@file.Weight</td>
-                        <td>
-                            <a type="button" class="btn btn-danger" asp-controller="Drones" asp-action="Delete" asp-route-id="@file.DroneID">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-}
+    </tbody>
+</table>

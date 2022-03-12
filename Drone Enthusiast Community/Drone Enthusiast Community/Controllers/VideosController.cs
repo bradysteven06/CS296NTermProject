@@ -28,7 +28,8 @@ namespace Drone_Enthusiast_Community.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var videoList = await LoadAllFiles();
+            List<VideoModel> videoList = null;
+            await Task.Run(() => videoList = repo.Videos.ToList());
             ViewBag.Message = TempData["Message"];
             return View(videoList);
         }
@@ -48,7 +49,7 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         /*
-         * TODO - Add file type validation
+         * TODO - Fix file type validation message. Does not display
          * TODO - Refactor code for single file instead of list
          * TODO - Allow larger files, look into chunking file
          * TODO - Display Uploaded by
@@ -59,6 +60,8 @@ namespace Drone_Enthusiast_Community.Controllers
         [RequestSizeLimit(25_000_000)]
         public async Task<IActionResult> UploadVideo(List<IFormFile> files, string description)
         {
+            var allowedExtensions = new[] { ".mp4", ".mov"};
+
             foreach (var file in files)
             {
                 var basePath = Path.Combine(Directory.GetCurrentDirectory() + "\\wwwroot/VideoUploads\\");
@@ -70,21 +73,28 @@ namespace Drone_Enthusiast_Community.Controllers
 
                 if (!System.IO.File.Exists(filePath))
                 {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    if (allowedExtensions.Contains(extension.ToLower()))
                     {
-                        await file.CopyToAsync(stream);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                        var fileModel = new VideoModel
+                        {
+                            Date = DateTime.Now,
+                            Title = fileName,
+                            FilePath = filePath,
+                            Extension = extension,
+                            Description = description,
+                            Uploader = await userManager.GetUserAsync(User)
+                        };
+                        await repo.AddVideoAsync(fileModel);
+                        TempData["Message"] = "File successfully uploaded.";
                     }
-                    var fileModel = new VideoModel
+                    else
                     {
-                        Date = DateTime.UtcNow,
-                        Title = fileName,
-                        FilePath = filePath,
-                        Extension = extension,
-                        Description = description,
-                        Uploader = await userManager.GetUserAsync(User)
-                    };
-                    await repo.AddVideoAsync(fileModel);
-                    TempData["Message"] = "File successfully uploaded.";
+                        TempData["Mesage"] = "Upload failed. Unsupported file type. Use mp4, mov.";
+                    }
                 }
                 else
                 {
@@ -122,14 +132,6 @@ namespace Drone_Enthusiast_Community.Controllers
             await repo.DeleteVideoAsync(file);
             TempData["Message"] = $"Removed {file.Title} successfully from File System.";
             return RedirectToAction("Index");
-        }
-
-        // Gets list of videos
-        private async Task<FileUploadVM> LoadAllFiles()
-        {
-            var viewModel = new FileUploadVM();
-            viewModel.VideoFiles = await repo.Videos.ToListAsync();
-            return viewModel;
         }
     }
 }

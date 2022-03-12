@@ -1,4 +1,8 @@
 ﻿<h4 align="center">Videos</h4>
+
+<a type="button" class="btn btn-primary" asp-controller="Videos" asp-action="Add">Add Video</a>
+<p>Allowed file types - mp4, mov</p>
+<p>25MB size limit</p>
 <hr />
 @if (ViewBag.Message != null)
 {
@@ -7,43 +11,39 @@
     </div>
 }
 
-<a type="button" class="btn btn-primary" asp-controller="Videos" asp-action="Add">Add Video</a>
-<p>25MB size limit</p>
-<hr />
-
-@if (Model.VideoFiles.Count == 0)
+@if (Model.Count == 0)
 {
-    <caption>No Records Found</caption> 
+    <caption>No Records Found</caption>
 }
 else
 {
-        <table class="table table-striped">
-            <thead>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Description</th>
+                <th>Created On</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in Model)
+            {
                 <tr>
-                    <th></th>
-                    <th>Description</th>
-                    <th>Created On</th>
-                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var file in Model.VideoFiles)
-                {
-                    <tr>
-                        <th>
-                            <a asp-controller="Videos" asp-action="ViewVideo" asp-route-id="@file.VideoID">
-                                <video src="~/VideoUploads/@file.Title@file.Extension" alt="video"
-                                height="200" width="200"asp-append-version="true" />
-                            </a>
-                        </th>
-                        <td>@file.Description</td>
-                        <td>@file.Date</td>
-                        <td>
-                            <a class="btn btn-danger" asp-controller="Videos" asp-action="Delete" asp-route-id="@file.VideoID">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                    <th>
+                        <a asp-controller="Videos" asp-action="ViewVideo" asp-route-id="@file.VideoID">
+                            <video src="~/VideoUploads/@file.Title@file.Extension" alt="video"
+                                   height="200" width="200" asp-append-version="true" />
+                        </a>
+                    </th>
+                    <td>@file.Description</td>
+                    <td>@file.Date</td>
+                    <td>
+                        <a class="btn btn-danger" asp-controller="Videos" asp-action="Delete" asp-route-id="@file.VideoID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 

@@ -24,7 +24,9 @@ namespace Drone_Enthusiast_Community.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var droneList = await LoadAllFiles();
+            List<DroneModel> droneList = null;
+            await Task.Run(() => droneList = repo.Drones.ToList());
+
             ViewBag.Message = TempData["Message"];
             return View(droneList);
         }
@@ -43,7 +45,7 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         /*
-         * TODO - Add file type validation
+         * TODO - Fix file type validation message. Does not display
          * TODO - Refactor code for single file instead of list
          * TODO - set maximum image upload size
          */
@@ -51,6 +53,7 @@ namespace Drone_Enthusiast_Community.Controllers
         [Authorize]
         public async Task<IActionResult> AddDrone(List<IFormFile> files, string description, string name, string size, string weight)
         {
+            var allowedExtensions = new[] { ".jpg", ".png", ".jpeg", ".gif" };
             foreach (var file in files)
             {
                 var basePath = Path.Combine(Directory.GetCurrentDirectory() + "\\wwwroot/DroneUploads\\");
@@ -59,29 +62,38 @@ namespace Drone_Enthusiast_Community.Controllers
                 var fileName = Path.GetFileNameWithoutExtension(file.FileName);
                 var filePath = Path.Combine(basePath, file.FileName);
                 var extension = Path.GetExtension(file.FileName);
-                if (!System.IO.File.Exists(filePath))
-                {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                
+                    if (!System.IO.File.Exists(filePath))
                     {
-                        await file.CopyToAsync(stream);
+                        if (allowedExtensions.Contains(extension.ToLower()))
+                        {
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+                            var fileModel = new DroneModel
+                            {
+                                ImageName = fileName,
+                                ImageExtension = extension,
+                                FilePath = filePath,
+                                Name = name,
+                                Description = description,
+                                Size = size,
+                                Weight = weight
+                            };
+                            await repo.AddDroneAsync(fileModel);
+                            TempData["Message"] = "File successfully uploaded.";
+                        }
+                        else
+                        {
+                            TempData["Mesage"] = "Upload failed. Unsupported file type. Use jpg, jpeg, png, gif.";
+                        }
                     }
-                    var fileModel = new DroneModel
+                    else
                     {
-                        ImageName = fileName,
-                        ImageExtension = extension,
-                        FilePath = filePath,
-                        Name = name,
-                        Description = description,
-                        Size = size,
-                        Weight = weight
-                    };
-                    await repo.AddDroneAsync(fileModel);
-                    TempData["Message"] = "File successfully uploaded.";
-                }
-                else
-                {
-                    TempData["Message"] = "Upload failed. Filename already taken.";
-                }
+                        TempData["Message"] = "Upload failed. Filename already taken.";
+                    }
+                
             }
             
             return RedirectToAction("Index");
@@ -106,12 +118,28 @@ namespace Drone_Enthusiast_Community.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> FilterDrones(string name)
+        {
+            List<DroneModel> droneList = null;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                await Task.Run(() =>
+                    droneList = (from i in repo.Drones
+                                 where i.Name == name
+                                 select i).ToList()
+                );
+            }
+            ViewBag.FiltersEnable = 1;
+            return View("Index", droneList);
+        }
+
         // Gets list of drones
-        private async Task<FileUploadVM> LoadAllFiles()
+        /*private async Task<FileUploadVM> LoadAllFiles()
         {
             var viewModel = new FileUploadVM();
             viewModel.DroneFiles = await repo.Drones.ToListAsync();
             return viewModel;
-        }
+        }*/
     }
 }

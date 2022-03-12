@@ -24,13 +24,14 @@ namespace Drone_Enthusiast_Community.Repos
         public async Task AddResourceAsync(ResourceModel resource)
         {
             resource.ResourceID = resources.Count;
-            resources.Add(resource);
+            await Task.Run(() => resources.Add(resource));
         }
 
         // Delete a resource
         public async Task DeleteResourceAsync(ResourceModel resource)
         {
-            await Task.Run(() => resources.RemoveAt(resource.ResourceID));
+            resources.RemoveAt(resource.ResourceID);
+            //await Task.Run(() => resources.RemoveAt(resource.ResourceID));
         }
     }
 }

@@ -3,7 +3,7 @@
 <a type="button" class="btn btn-primary" asp-controller="Resources" asp-action="Add">Add New Resource</a>
 <table class="table table-striped">
     <tbody>
-        @foreach (var file in Model.ResourceList)
+        @foreach (var file in Model)
         {
             <tr>
                 <th></th>

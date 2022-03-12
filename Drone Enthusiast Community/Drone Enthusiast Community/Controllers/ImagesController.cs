@@ -28,16 +28,19 @@ namespace Drone_Enthusiast_Community.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var imageList = await LoadAllFiles();
+            List<ImageModel> imageList = null;
+            await Task.Run(() => imageList = repo.Images.ToList());
             ViewBag.Message = TempData["Message"];
             return View(imageList);
         }
 
+        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var file = await repo.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync(); ;
@@ -45,16 +48,20 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         /*
-         * TODO - Add file type validation
+         * TODO - Fix file type validation message. Does not display
          * TODO - Refactor code for single file instead of list
-         * TODO - set maximum image upload size
          * TODO - Display Uploaded by
+         * TODO - Display error for files larger than limit
          */
 
         // uploads an image
         [HttpPost]
+        [Authorize]
+        [RequestSizeLimit(25_000_000)]
         public async Task<IActionResult> UploadImage(List<IFormFile> files, string description)
         {
+            var allowedExtensions = new[] { ".jpg", ".png", ".jpeg", ".gif" };
+
             foreach (var file in files)
             {
                 var basePath = Path.Combine(Directory.GetCurrentDirectory() + "\\wwwroot/ImageUploads\\");
@@ -65,21 +72,28 @@ namespace Drone_Enthusiast_Community.Controllers
                 var extension = Path.GetExtension(file.FileName);
                 if (!System.IO.File.Exists(filePath))
                 {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    if (allowedExtensions.Contains(extension.ToLower()))
                     {
-                        await file.CopyToAsync(stream);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                        var fileModel = new ImageModel
+                        {
+                            Date = DateTime.Now,
+                            Title = fileName,
+                            FilePath = filePath,
+                            Extension = extension,
+                            Description = description,
+                            Uploader = await userManager.GetUserAsync(User)
+                        };
+                        await repo.AddImageAsync(fileModel);
+                        TempData["Message"] = "File successfully uploaded.";
                     }
-                    var fileModel = new ImageModel
+                    else
                     {
-                        Date = DateTime.UtcNow,
-                        Title = fileName,
-                        FilePath = filePath,
-                        Extension = extension,
-                        Description = description,
-                        Uploader = await userManager.GetUserAsync(User)
-                    };
-                    await repo.AddImageAsync(fileModel);
-                    TempData["Message"] = "File successfully uploaded.";
+                        TempData["Mesage"] = "Upload failed. Unsupported file type. Use jpg, jpeg, png, gif.";
+                    }
                 }
                 else
                 {
@@ -90,6 +104,7 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         // gets single image object for view
+        [Authorize]
         public async Task<IActionResult> ViewImage(int id)
         {
             var file = await repo.Images.Where(x => x.ImageID == id).FirstOrDefaultAsync(); ;
@@ -97,6 +112,7 @@ namespace Drone_Enthusiast_Community.Controllers
         }
 
         // deletes image
+        [Authorize]
         public async Task<IActionResult> DeleteImage(int id)
         {
 
@@ -113,14 +129,6 @@ namespace Drone_Enthusiast_Community.Controllers
             await repo.DeleteImageAsync(file);
             TempData["Message"] = $"Removed {file.Title} successfully from File System.";
             return RedirectToAction("Index");
-        }
-
-        // Gets list of images
-        private async Task<FileUploadVM> LoadAllFiles()
-        {
-            var viewModel = new FileUploadVM();
-            viewModel.ImageFiles = await repo.Images.ToListAsync();
-            return viewModel;
         }
     }
 }
